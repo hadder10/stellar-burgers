@@ -143,22 +143,7 @@ const stellarBurgerSlice = createSlice({
       );
     }
   },
-  selectors: {
-    selectIngredients: (state) => state.ingredients,
-    selectLoading: (state) => state.loading,
-    selectOrderModalData: (state) => state.orderModalData,
-    selectConstructorItems: (state) => state.constructorItems,
-    selectOrderRequest: (state) => state.orderRequest,
-    selectUser: (state) => state.user,
-    selectOrders: (state) => state.orders,
-    selectTotalOrders: (state) => state.totalOrders,
-    selectTodayOrders: (state) => state.ordersToday,
-    selectUserOrders: (state) => state.userOrders,
-    selectIsAuthenticated: (state) => state.isAuthenticated,
-    selectIsInit: (state) => state.isInit,
-    selectIsModalOpened: (state) => state.isModalOpened,
-    selectErrorText: (state) => state.errorText
-  },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
@@ -309,22 +294,34 @@ export const fetchUpdateUser = createAsyncThunk(
   async (user: Partial<TRegisterData>) => updateUserApi(user)
 );
 
-export const {
-  selectLoading,
-  selectIngredients,
-  selectOrderModalData,
-  selectConstructorItems,
-  selectOrderRequest,
-  selectUser,
-  selectOrders,
-  selectTotalOrders,
-  selectTodayOrders,
-  selectUserOrders,
-  selectIsAuthenticated,
-  selectIsInit,
-  selectIsModalOpened,
-  selectErrorText
-} = stellarBurgerSlice.selectors;
+type RootState = {
+  stellarBurger: TInitialState;
+};
+
+export const selectIngredients = (state: RootState) =>
+  state.stellarBurger.ingredients;
+export const selectLoading = (state: RootState) => state.stellarBurger.loading;
+export const selectOrderModalData = (state: RootState) =>
+  state.stellarBurger.orderModalData;
+export const selectConstructorItems = (state: RootState) =>
+  state.stellarBurger.constructorItems;
+export const selectOrderRequest = (state: RootState) =>
+  state.stellarBurger.orderRequest;
+export const selectUser = (state: RootState) => state.stellarBurger.user;
+export const selectOrders = (state: RootState) => state.stellarBurger.orders;
+export const selectTotalOrders = (state: RootState) =>
+  state.stellarBurger.totalOrders;
+export const selectTodayOrders = (state: RootState) =>
+  state.stellarBurger.ordersToday;
+export const selectUserOrders = (state: RootState) =>
+  state.stellarBurger.userOrders;
+export const selectIsAuthenticated = (state: RootState) =>
+  state.stellarBurger.isAuthenticated;
+export const selectIsInit = (state: RootState) => state.stellarBurger.isInit;
+export const selectIsModalOpened = (state: RootState) =>
+  state.stellarBurger.isModalOpened;
+export const selectErrorText = (state: RootState) =>
+  state.stellarBurger.errorText;
 
 export const {
   addIngredient,

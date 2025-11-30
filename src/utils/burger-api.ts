@@ -40,20 +40,28 @@ export const fetchWithRefresh = async <T>(
   options: RequestInit
 ) => {
   try {
-    const res = await fetch(url, options);
+    let res = await fetch(url, options);
+    if (res.ok) {
+      return await checkResponse<T>(res);
+    }
+
+    // If unauthorized — try refresh token flow and retry once
+    if (res.status === 401) {
+      const refreshData = await refreshToken();
+      const existingHeaders =
+        (options.headers as { [key: string]: string }) || {};
+      const newHeaders = {
+        ...existingHeaders,
+        authorization: refreshData.accessToken
+      } as HeadersInit;
+      const newOptions: RequestInit = { ...options, headers: newHeaders };
+      const retryRes = await fetch(url, newOptions);
+      return await checkResponse<T>(retryRes);
+    }
+
     return await checkResponse<T>(res);
   } catch (err) {
-    if ((err as { message: string }).message === 'jwt expired') {
-      const refreshData = await refreshToken();
-      if (options.headers) {
-        (options.headers as { [key: string]: string }).authorization =
-          refreshData.accessToken;
-      }
-      const res = await fetch(url, options);
-      return await checkResponse<T>(res);
-    } else {
-      return Promise.reject(err);
-    }
+    return Promise.reject(err);
   }
 };
 
